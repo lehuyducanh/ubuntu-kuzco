@@ -1,21 +1,26 @@
 #!/bin/bash
 
-# Tạo user mới
+# Tạo người dùng mới
 username="lhda"
 password="lhda"
 
-# Kiểm tra nếu user đã tồn tại
+# Kiểm tra xem người dùng đã tồn tại hay chưa
 if id "$username" &>/dev/null; then
-    echo "User $username đã tồn tại."
+    echo "Người dùng $username đã tồn tại!"
 else
-    # Tạo user mới
-    useradd -m -s /bin/bash "$username"
-
-    # Đặt mật khẩu cho user
+    # Tạo người dùng mới
+    adduser --disabled-password --gecos "" $username
+    
+    # Đặt mật khẩu cho người dùng
     echo "$username:$password" | chpasswd
 
-    # Thêm user vào nhóm sudo (tùy chọn)
-    usermod -aG sudo "$username"
+    # Thêm người dùng vào nhóm sudo
+    usermod -aG sudo $username
 
-    echo "User $username đã được tạo với mật khẩu $password."
+    echo "Đã tạo người dùng mới $username với mật khẩu $password."
 fi
+
+# Đặt người dùng mới làm tài khoản mặc định
+echo "[user]\ndefault=$username" | tee -a /etc/wsl.conf
+
+echo "Hoàn thành. Hãy khởi động lại WSL."
